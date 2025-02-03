@@ -8,18 +8,18 @@ app.listen(8888, () => {
   );
 });
 
-app.use("/kittu", (req, res) => {
-  res.send("jai sai master jai bapuji maharaj");
+app.use("/hello/2", (req, res) => {
+  res.send("response sended");
 });
 
-app.use("/listen", (req, res) => {
-  res.send("response sended");
+app.use("/hello", (req, res) => {
+  res.send("jai sai master jai bapuji maharaj");
 });
 
 app.use("/update", (req, res) => {
   res.send("updated");
 });
 
-app.use("/newup", (req, res) => {
+app.use("/", (req, res) => {
   res.send("Responded suceffuly");
 });
