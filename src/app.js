@@ -9,7 +9,28 @@ app.listen(8888, () => {
 });
 
 // for regex there is no need within the double quotes ==> syntax /characters without dobule quotes/
-// query paramaters`````
+// query paramaters
+
+app.use(
+  "/user1",
+  (req, res, next) => {
+    console.log("Route Response 1!");
+    next();
+    res.send("Route handler 1");
+  },
+  [
+    (req, res, next) => {
+      res.send("Route handler 2");
+      console.log("Response 2!!");
+      next();
+    },
+    (req, res, next) => {
+      res.send("Route handler 3!!! ");
+      console.log("Response 3!!!");
+    },
+  ]
+);
+
 app.get("/user/:userId/:name", (req, res) => {
   // query string data in databse
   console.log(req.params);
