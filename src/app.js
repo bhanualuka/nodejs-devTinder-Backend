@@ -1,34 +1,34 @@
 const express = require("express");
-
+const { connectDB } = require("./config/database");
 const app = express();
+const User = require("./models/user");
 
-const { adminAuth, userAuth } = require("./utils/adminAuth");
+app.post("/signup", async (req, res) => {
+  const user = new User({
+    firstName: "Bhanuprakash",
+    lastName: "Aluka",
+    emailId: "alukabhanuprakash@gmail.com",
+    age: 25,
+  });
 
-app.listen(8888, () => {
-  console.log(
-    "Server is succefully runningg... jai sai master jai bapuji maharaj"
-  );
+  try {
+    await user.save();
+    res.send("User Added Successfully");
+  } catch (err) {
+    console.log("User Not posted", err.message);
+    res.status(400).send("");
+  }
 });
 
-// for regex there is no need within the double quotes ==> syntax /characters without dobule quotes/
-// query paramaters (?&...etc)
-
-app.use("/admin", adminAuth);
-
-app.get("/user/login", (req, res) => {
-  res.send("user logined");
-});
-
-app.get("/user/data", userAuth, (req, res) => {
-  console.log("user Authentication");
-  res.send("user Data ");
-});
-app.get("/admin/getAllData", (req, res) => {
-  console.log("Data fetched sucessfully");
-  res.send("User data");
-});
-
-app.get("/admin/deleteData", (req, res) => {
-  console.log("Data Deletd Succefully");
-  res.send("Data delted ");
-});
+connectDB()
+  .then(() => {
+    console.log("Database connection Established...");
+    app.listen(8888, () => {
+      console.log(
+        "Server is succefully runningg 8888... jai sai master jai bapuji maharaj"
+      );
+    });
+  })
+  .catch(() => {
+    console.log("Database cannot be connect");
+  });
