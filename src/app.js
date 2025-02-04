@@ -2,6 +2,8 @@ const express = require("express");
 
 const app = express();
 
+const { adminAuth, userAuth } = require("./utils/adminAuth");
+
 app.listen(8888, () => {
   console.log(
     "Server is succefully runningg... jai sai master jai bapuji maharaj"
@@ -9,47 +11,24 @@ app.listen(8888, () => {
 });
 
 // for regex there is no need within the double quotes ==> syntax /characters without dobule quotes/
-// query paramaters
+// query paramaters (?&...etc)
 
-app.use(
-  "/user1",
-  (req, res, next) => {
-    console.log("Route Response 1!");
-    next();
-    res.send("Route handler 1");
-  },
-  [
-    (req, res, next) => {
-      res.send("Route handler 2");
-      console.log("Response 2!!");
-      next();
-    },
-    (req, res, next) => {
-      res.send("Route handler 3!!! ");
-      console.log("Response 3!!!");
-    },
-  ]
-);
+app.use("/admin", adminAuth);
 
-app.get("/user/:userId/:name", (req, res) => {
-  // query string data in databse
-  console.log(req.params);
-
-  res.send({
-    firstName: "Bhanuprakash",
-    age: 24,
-    hobbies: ["Reading books", "playing cricket"],
-  });
+app.get("/user/login", (req, res) => {
+  res.send("user logined");
 });
 
-app.use("/hello", (req, res) => {
-  res.send("jai sai master jai bapuji maharaj");
+app.get("/user/data", userAuth, (req, res) => {
+  console.log("user Authentication");
+  res.send("user Data ");
+});
+app.get("/admin/getAllData", (req, res) => {
+  console.log("Data fetched sucessfully");
+  res.send("User data");
 });
 
-app.use("/update", (req, res) => {
-  res.send("updated");
+app.get("/admin/deleteData", (req, res) => {
+  console.log("Data Deletd Succefully");
+  res.send("Data delted ");
 });
-
-/* app.use("/", (req, res) => {
-  res.send("Responded suceffuly");
-}); */
