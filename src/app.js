@@ -10,7 +10,7 @@ app.listen(8888, () => {
 
 // for regex there is no need within the double quotes ==> syntax /characters without dobule quotes/
 // query paramaters`````
-app.get("/user/:userId", (req, res) => {
+app.get("/user/:userId/:name", (req, res) => {
   // query string data in databse
   console.log(req.params);
 
