@@ -46,6 +46,42 @@ app.get("/feed", async (req, res) => {
   }
 });
 
+//  Api to delete the data
+app.delete("/delete", async (req, res) => {
+  const userId = req.body.userId;
+  await User.findByIdAndDelete(userId);
+  res.send("User deleted successfully");
+  try {
+  } catch (err) {
+    res.status(400).send("Something went wrong");
+  }
+});
+
+// Api to update(patch) the data
+app.patch("/patch", async (req, res) => {
+  // const userId = req.body.userId;
+  const emailId = req.body.emailId;
+  // console.log(emailId);
+
+  const updatedData = req.body;
+
+  try {
+    // const updateUser = await User.findByIdAndUpdate(userId, updatedData);
+
+    const updateUser = await User.findOneAndUpdate(
+      { emailId: emailId },
+      { $set: updatedData },
+      {
+        returnDocument: "after",
+      }
+    );
+    console.log(updateUser);
+    res.send("User Updated Successfully");
+  } catch (err) {
+    res.status(400).send("Something went wrong");
+  }
+});
+
 // Connected to database and server:
 connectDB()
   .then(() => {
