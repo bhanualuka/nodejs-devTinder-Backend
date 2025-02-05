@@ -13,10 +13,29 @@ app.post("/signup", async (req, res) => {
   const user = new User(req.body);
 
   try {
-    await user.save();
-    res.send("User Added Successfully");
+    const ALLOWED_UPDATES = [
+      "firstName",
+      "lastName",
+      "emailId",
+      "password",
+      "photoURL",
+      "age",
+      "gendar",
+      "skills",
+    ];
+
+    const isAllowedUpdates = Object.keys(req.body).every((k) =>
+      ALLOWED_UPDATES.includes(k)
+    );
+
+    if (!isAllowedUpdates) {
+      throw new Error("Cannot add extra fields");
+    } else {
+      await user.save();
+      res.send("User Added Successfully");
+    }
   } catch (err) {
-    console.log("User Not posted", err.message);
+    console.log("Post Unsucessfull", err.message);
     res.status(400).send("Validate Error:" + err.message);
   }
 });
@@ -60,28 +79,41 @@ app.delete("/delete", async (req, res) => {
 });
 
 // Api to update(patch) the data
-app.patch("/patch", async (req, res) => {
-  // const userId = req.body.userId;
-  const emailId = req.body.emailId;
+app.patch("/patch/:userId", async (req, res) => {
+  const userId = req.params.userId;
+  // const emailId = req.body.emailId;
   // console.log(emailId);
 
   const updatedData = req.body;
 
   try {
-    // const updateUser = await User.findByIdAndUpdate(userId, updatedData);
+    const updateUser = await User.findByIdAndUpdate(userId, updatedData, {
+      returnDocument: "after",
+      runValidators: true,
+    });
 
-    const updateUser = await User.findOneAndUpdate(
+    const ALLOWED_UPDATES = ["photoURL", "age", "skills"];
+
+    const isAllowedUpdates = Object.keys(req.body).every((k) =>
+      ALLOWED_UPDATES.includes(k)
+    );
+
+    if (!isAllowedUpdates) {
+      throw new Error("user cannot be updates certain fields");
+    }
+
+    /*   const updateUser = await User.findOneAndUpdate(
       { emailId: emailId },
       { $set: updatedData },
       {
         runValidators: true,
         returnDocument: "after",
       }
-    );
+    ); */
     console.log(updateUser);
     res.send("User Updated Successfully");
   } catch (err) {
-    res.status(400).send("Something went wrong " + err.message);
+    res.status(400).send("UPATE FAILED:" + err.message);
   }
 });
 
