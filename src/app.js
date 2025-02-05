@@ -5,10 +5,10 @@ const User = require("./models/user");
 
 app.post("/signup", async (req, res) => {
   const user = new User({
-    firstName: "Bhanuprakash",
-    lastName: "Aluka",
-    emailId: "alukabhanuprakash@gmail.com",
-    age: 25,
+    firstName: "Sai master",
+    lastName: "sai master",
+    emailId: "saimaster@gmail.com",
+    age: 0,
   });
 
   try {
@@ -16,7 +16,7 @@ app.post("/signup", async (req, res) => {
     res.send("User Added Successfully");
   } catch (err) {
     console.log("User Not posted", err.message);
-    res.status(400).send("");
+    res.status(400).send("Something went wrong");
   }
 });
 
