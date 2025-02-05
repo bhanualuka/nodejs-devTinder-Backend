@@ -3,6 +3,8 @@ const { connectDB } = require("./config/database");
 const app = express();
 const User = require("./models/user");
 
+// These Express.json() function converts  Json data into js objects.
+// we can apply to all  routers using middleware given by expressjs
 app.use(express.json());
 
 //  Api  posting the data into  database:
@@ -15,7 +17,7 @@ app.post("/signup", async (req, res) => {
     res.send("User Added Successfully");
   } catch (err) {
     console.log("User Not posted", err.message);
-    res.status(400).send("Something went wrong");
+    res.status(400).send("Validate Error:" + err.message);
   }
 });
 
@@ -72,13 +74,14 @@ app.patch("/patch", async (req, res) => {
       { emailId: emailId },
       { $set: updatedData },
       {
+        runValidators: true,
         returnDocument: "after",
       }
     );
     console.log(updateUser);
     res.send("User Updated Successfully");
   } catch (err) {
-    res.status(400).send("Something went wrong");
+    res.status(400).send("Something went wrong " + err.message);
   }
 });
 
