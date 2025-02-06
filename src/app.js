@@ -66,6 +66,42 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+// Api to login
+app.post("/login", async (req, res) => {
+  try {
+    const ALLOWED_LOGIN = ["emailId", "password"];
+
+    const isAllowedUpdates = Object.keys(req.body).every((k) =>
+      ALLOWED_LOGIN.includes(k)
+    );
+
+    const user = req.body;
+    const { emailId, password } = req.body;
+    if (isAllowedUpdates) {
+      const isValidEmail = await User.findOne({ emailId: emailId });
+
+      if (!isValidEmail) {
+        throw new Error("Invalid Credentials");
+      } else {
+        const isPassowrdValid = await bcrypt.compare(
+          password,
+          isValidEmail.password
+        );
+
+        if (isPassowrdValid) {
+          res.send("User Added Successfully");
+        } else {
+          throw new Error("Invalid Credentials");
+        }
+      }
+    } else {
+      throw new Error("Only email and password should be enter");
+    }
+  } catch (err) {
+    res.status(400).send("ERROR:  " + err.message);
+  }
+});
+
 // Api to get the user data by user emailID:
 app.get("/user", async (req, res) => {
   try {
