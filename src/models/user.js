@@ -81,7 +81,7 @@ const userSchema = new Schema(
       default: "this is user default about",
     },
   },
-  { timeStamps: true }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("user", userSchema);
