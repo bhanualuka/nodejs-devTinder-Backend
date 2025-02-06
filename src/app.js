@@ -5,9 +5,12 @@ const User = require("./models/user");
 
 const { validateSignup } = require("./utils/validate");
 const bcrypt = require("bcrypt");
+const cookieparser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 // These Express.json() function converts  Json data into js objects.
 // we can apply to all  routers using middleware given by expressjs
 app.use(express.json());
+app.use(cookieparser());
 
 //  Api  posting the data into  database:
 app.post("/signup", async (req, res) => {
@@ -66,7 +69,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-// Api to login
+// post Api to login
 app.post("/login", async (req, res) => {
   try {
     const ALLOWED_LOGIN = ["emailId", "password"];
@@ -75,21 +78,25 @@ app.post("/login", async (req, res) => {
       ALLOWED_LOGIN.includes(k)
     );
 
-    const user = req.body;
     const { emailId, password } = req.body;
     if (isAllowedUpdates) {
-      const isValidEmail = await User.findOne({ emailId: emailId });
+      const user = await User.findOne({ emailId: emailId });
 
-      if (!isValidEmail) {
+      if (!user) {
         throw new Error("Invalid Credentials");
       } else {
-        const isPassowrdValid = await bcrypt.compare(
-          password,
-          isValidEmail.password
-        );
+        const isPassowrdValid = await bcrypt.compare(password, user.password);
 
         if (isPassowrdValid) {
-          res.send("User Added Successfully");
+          const token = await jwt.sign(
+            { _id: user._id.toString() },
+            "DEV@Tinder123"
+          );
+
+          res.cookie("token", token);
+          console.log(token);
+
+          res.send("User LoggedIN Successfully");
         } else {
           throw new Error("Invalid Credentials");
         }
@@ -100,6 +107,22 @@ app.post("/login", async (req, res) => {
   } catch (err) {
     res.status(400).send("ERROR:  " + err.message);
   }
+});
+
+//  get Api to profile
+app.get("/profile", async (req, res) => {
+  const UserCookie = req.cookies;
+  const { token } = UserCookie;
+
+  console.log(token);
+
+  const decoded = await jwt.verify(token, "DEV@Tinder123");
+  const { _id } = decoded;
+
+  const user = await User.findById({ _id: _id });
+  res.send(user);
+
+  console.log(token);
 });
 
 // Api to get the user data by user emailID:
