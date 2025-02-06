@@ -3,6 +3,8 @@ const { connectDB } = require("./config/database");
 const app = express();
 const User = require("./models/user");
 
+const { validateSignup } = require("./utils/validate");
+const bcrypt = require("bcrypt");
 // These Express.json() function converts  Json data into js objects.
 // we can apply to all  routers using middleware given by expressjs
 app.use(express.json());
@@ -10,9 +12,33 @@ app.use(express.json());
 //  Api  posting the data into  database:
 app.post("/signup", async (req, res) => {
   // created a new instance of the user model
-  const user = new User(req.body);
+  const {
+    firstName,
+    lastName,
+    password,
+    emailId,
+    skills,
+    gendar,
+    photoURL,
+    age,
+  } = req.body;
 
   try {
+    validateSignup(req);
+    const passwordHash = await bcrypt.hash(password, 10);
+    console.log(passwordHash);
+
+    const user = new User({
+      firstName: firstName,
+      lastName: lastName,
+      emailId: emailId,
+      password: passwordHash,
+      photoURL: photoURL,
+      age: age,
+      gendar: gendar,
+      skills: skills,
+    });
+
     const ALLOWED_UPDATES = [
       "firstName",
       "lastName",
