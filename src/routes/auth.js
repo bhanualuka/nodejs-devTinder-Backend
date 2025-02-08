@@ -1,30 +1,10 @@
 const express = require("express");
-const { connectDB } = require("./config/database");
-const app = express();
-// const User = require("./models/user");
-/* 
-const { validateSignup } = require("./utils/validate");
-const bcrypt = require("bcrypt"); */
+const authRouter = express.Router(); //--> Bundling routers
+const bcrypt = require("bcrypt");
+const User = require("../models/user");
+const { validateSignup } = require("../utils/validate");
 
-const cookieparser = require("cookie-parser");
-// const jwt = require("jsonwebtoken");
-// const { userAuth } = require("./middleware/auth");
-// These Express.json() function converts  Json data into js objects.
-// we can apply to all  routers using middleware given by expressjs
-app.use(express.json());
-app.use(cookieparser());
-
-const authRouter = require("./routes/auth");
-const profileRouter = require("./routes/profile");
-const requestRouter = require("./routes/requests");
-
-app.use("/", authRouter);
-app.use("/", profileRouter);
-app.use("/", requestRouter);
-
-//  Api  posting the data into  database:
-
-/* app.post("/signup", async (req, res) => {
+authRouter.post("/signup", async (req, res) => {
   // created a new instance of the user model
   const {
     firstName,
@@ -80,8 +60,7 @@ app.use("/", requestRouter);
   }
 });
 
-// post Api to login:
-app.post("/login", async (req, res) => {
+authRouter.post("/login", async (req, res) => {
   try {
     const ALLOWED_LOGIN = ["emailId", "password"];
 
@@ -115,48 +94,6 @@ app.post("/login", async (req, res) => {
   } catch (err) {
     res.status(400).send("ERROR:  " + err.message);
   }
-}); */
-
-//  get Api to profile:
-/* app.get("/profile", userAuth, async (req, res) => {
-  const user = req.user;
-
-  try {
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    res.send(user);
-  } catch (err) {
-    res.status(400).send("ERROR:" + err.message);
-  }
-}); */
-
-// post Api to SendConnectionRequest
-/* app.post("/SendConnectionRequest", userAuth, async (req, res) => {
-  console.log("Connection send successfully");
-
-  try {
-    const user = req.user;
-    if (!user) {
-      throw new Error("User not found");
-    }
-    res.send("Connection request sended successfully");
-  } catch (err) {
-    res.status(400).send("ERROR :" + err.message);
-  }
 });
- */
-// Connected to database and server:
-connectDB()
-  .then(() => {
-    console.log("Database connection Established...");
-    app.listen(8888, () => {
-      console.log(
-        "Server is succefully runningg 8888... jai sai master jai bapuji maharaj"
-      );
-    });
-  })
-  .catch(() => {
-    console.log("Database cannot be connect");
-  });
+
+module.exports = authRouter;
