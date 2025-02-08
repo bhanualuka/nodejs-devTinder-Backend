@@ -1,21 +1,23 @@
-authRouter
+## authRouter
 
 - Post/signup
 - Post/login
 - Post/logout
 
-profileRouter
+## profileRouter
 
 - Get/profile/view
 - Patch/profile/edit
 - Patch/profile/password(udpate)
 
-connectionsRequestRouter
+## connectionsRequestRouter
 
 - Post/request/send/intrested:userId
 - Post/request/send/ignored:userId
 - Post/request/review/accepted/:requestId
 - Post/request/review/rejected/:requestId
+
+## user Router
 
 - GET/user/connections
 - GET/user/requests/received
