@@ -1,9 +1,10 @@
 const express = require("express");
 const requestRouter = express.Router();
 const { userAuth } = require("../middleware/auth");
-const connectionRequest = require("../models/connectionRequest");
+const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
 
+//
 requestRouter.post(
   "/request/send/:status/:userId",
   userAuth,
@@ -13,13 +14,15 @@ requestRouter.post(
       const toUserId = req.params.userId;
       const status = req.params.status;
 
-      const isAllowedStatus = ["interested", "rejected"];
+      const isAllowedStatus = ["interested", "ignored"];
 
       if (!isAllowedStatus.includes(status)) {
-        res.status(400).send({ message: "Invalid Status type " + status });
+        return res
+          .status(400)
+          .send({ message: "Invalid Status type " + status });
       }
 
-      /* if (fromUserId.equals(toUserId)) {
+      /*  if (fromUserId.equals(toUserId)) {
         throw new Error("Cannot send Connection request to yourself");
       }
  */
@@ -31,7 +34,8 @@ requestRouter.post(
           .json({ message: " Sorry... Invalid User Request" });
       }
 
-      const existingConnectionRequestSend = await connectionRequest.findOne({
+      // Existing connection request
+      const existingConnectionRequestSend = await ConnectionRequest.findOne({
         $or: [
           {
             fromUserId,
@@ -50,7 +54,7 @@ requestRouter.post(
         });
       }
 
-      const connectionRequestSend = new connectionRequest({
+      const connectionRequestSend = new ConnectionRequest({
         fromUserId,
         toUserId,
         status,
@@ -58,9 +62,56 @@ requestRouter.post(
 
       const data = await connectionRequestSend.save();
 
-      res.json({ message: "Connection request sent seuccessfully" });
+      return res.json({ message: "Connection request sent seuccessfully" });
     } catch (err) {
-      res.status(400).send("ERROR :" + err.message);
+      return res.status(400).send("ERROR :" + err.message);
+    }
+  }
+);
+
+requestRouter.post(
+  "/request/review/:status/:requestId",
+  userAuth,
+  async (req, res) => {
+    try {
+      const loggedInUser = req.user;
+
+      const { status, requestId } = req.params;
+
+      // checking  status is valid or not ....
+
+      const ALLOWED_STATUS = ["accepted", "rejected"];
+
+      const isAllowedStatus = ALLOWED_STATUS.includes(status);
+
+      if (!isAllowedStatus) {
+        return res.status(400).json({ message: "Status not Allowed" });
+      }
+
+      const connectionRequestData = await ConnectionRequest.findOne({
+        _id: requestId,
+        toUserId: loggedInUser._id,
+        status: "interested",
+      });
+
+      if (!connectionRequestData) {
+        return res
+          .status(400)
+          .json({ message: "connection request not found" });
+      }
+
+      connectionRequestData.status = status;
+
+      const data = await connectionRequestData.save();
+
+      console.log(data);
+
+      return res.json({
+        message: "connection request" + status,
+        data: data,
+      });
+    } catch (err) {
+      return res.status(400).send("ERROR:" + err.message);
     }
   }
 );
