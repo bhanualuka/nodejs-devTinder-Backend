@@ -66,7 +66,7 @@ const userSchema = new Schema(
       },
     },
 
-    photoURL: {
+    photoUrl: {
       type: String,
       validate: (value) => {
         if (!validator.isURL(value)) {

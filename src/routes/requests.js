@@ -4,7 +4,7 @@ const { userAuth } = require("../middleware/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
 
-//
+//  post api for sending requests ==> Intrested or rejected (Basically we are intresting in users or ignoring them from our feed)
 requestRouter.post(
   "/request/send/:status/:userId",
   userAuth,
@@ -69,6 +69,7 @@ requestRouter.post(
   }
 );
 
+// post api for accepting or rejecting the users(users who sent us request to be frd)
 requestRouter.post(
   "/request/review/:status/:requestId",
   userAuth,
