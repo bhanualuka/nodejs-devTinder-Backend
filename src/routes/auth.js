@@ -20,7 +20,6 @@ authRouter.post("/signup", async (req, res) => {
   try {
     validateSignup(req);
     const passwordHash = await bcrypt.hash(password, 10);
-    console.log(passwordHash);
 
     const user = new User({
       firstName: firstName,
@@ -51,8 +50,12 @@ authRouter.post("/signup", async (req, res) => {
     if (!isAllowedUpdates) {
       throw new Error("Cannot add extra fields");
     } else {
-      await user.save();
-      res.send("User Added Successfully");
+      const savedUser = await user.save();
+      const token = await savedUser.getJWT();
+
+      res.cookie("token", token);
+
+      res.json({ message: "User Added Successfully", savedUser });
     }
   } catch (err) {
     console.log("Post Unsucessfull", err.message);
@@ -82,7 +85,7 @@ authRouter.post("/login", async (req, res) => {
 
           res.cookie("token", token);
 
-          res.send("User LoggedIN Successfully");
+          res.send(user);
         } else {
           throw new Error("Invalid Credentials");
         }

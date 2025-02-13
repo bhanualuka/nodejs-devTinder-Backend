@@ -105,8 +105,6 @@ requestRouter.post(
 
       const data = await connectionRequestData.save();
 
-      console.log(data);
-
       return res.json({
         message: "connection request" + status,
         data: data,

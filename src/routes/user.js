@@ -3,7 +3,7 @@ const { userAuth } = require("../middleware/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const userRouter = express.Router();
 const User = require("../models/user");
-const SAFE_DATA = "firstName lastName  age skills about";
+const SAFE_DATA = "firstName lastName  age skills about photoUrl age";
 
 //  Get api to  get all pending connections (which are in intrested status) of user
 userRouter.get(
@@ -18,13 +18,11 @@ userRouter.get(
         status: "interested",
       }).populate("fromUserId", SAFE_DATA);
 
-      if (!PendingRequests) {
-        throw new Error("User Not found");
-      }
+      const validRequests = PendingRequests.filter((req) => req.fromUserId);
 
       res.json({
         message: "Connection Pending Requests of" + loggedInUser.firstName,
-        data: PendingRequests,
+        data: validRequests,
       });
     } catch (err) {
       res.status(400).send("ERROR: " + err.message);
@@ -34,7 +32,8 @@ userRouter.get(
 
 // Get api to get all connections that are matched (which are frds both ) of user
 
-userRouter.get("/user/connections", userAuth, async (req, res) => {
+// My code
+/* userRouter.get("/user/connections", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
 
@@ -60,6 +59,46 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
 
       return row.fromUserId;
     });
+
+    res.json({ data });
+
+    console.log(data);
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+}); */
+
+userRouter.get("/user/connections", userAuth, async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+
+    const connectionRequests = await ConnectionRequest.find({
+      $or: [
+        {
+          toUserId: loggedInUser,
+          status: "accepted",
+        },
+        {
+          fromUserId: loggedInUser,
+          status: "accepted",
+        },
+      ],
+    })
+      .populate("fromUserId", SAFE_DATA)
+      .populate("toUserId", SAFE_DATA);
+
+    const data = connectionRequests
+      .map((row) => {
+        if (row.fromUserId && row.toUserId) {
+          if (row.fromUserId._id.toString() === loggedInUser._id.toString()) {
+            return row.toUserId;
+          } else {
+            return row.fromUserId;
+          }
+        }
+        return null; // Skip if either fromUserId or toUserId is null
+      })
+      .filter((connection) => connection !== null); // Filter out null connections
 
     res.json({ data });
   } catch (err) {
