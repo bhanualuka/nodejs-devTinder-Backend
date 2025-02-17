@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const { connectDB } = require("./config/database");
 const app = express();
@@ -24,11 +25,14 @@ app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 
+//
+const PORT = process.env.PORT || 3000;
+
 // Connected to database and server:
 connectDB()
   .then(() => {
     console.log("Database connection Established...");
-    app.listen(8888, () => {
+    app.listen(PORT, () => {
       console.log(
         "Server is succefully runningg 8888... jai sai master jai bapuji maharaj"
       );
