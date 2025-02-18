@@ -14,7 +14,12 @@ const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/requests");
 const userRouter = require("./routes/user");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://reactjs-dev-tinder-frontend-9lj4.vercel.app/",
+    credentials: true,
+  })
+);
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
