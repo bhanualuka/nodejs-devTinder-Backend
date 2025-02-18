@@ -16,7 +16,7 @@ const userRouter = require("./routes/user");
 
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
@@ -29,14 +29,12 @@ app.use("/", userRouter);
 const PORT = process.env.PORT || 4000;
 
 // Connected to database and server:
-console.log(PORT);
+// console.log(PORT);
 connectDB()
   .then(() => {
     console.log("Database connection Established...");
     app.listen(PORT, () => {
-      console.log(
-        "Server is succefully runningg 8888... jai sai master jai bapuji maharaj"
-      );
+      console.log("Server is succefully runningg 8888...");
     });
   })
   .catch(() => {
