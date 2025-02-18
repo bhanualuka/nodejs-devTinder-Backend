@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const { connectDB } = require("./config/database");
+const connectDB = require("./config/database");
 const app = express();
 const cors = require("cors");
 const cookieparser = require("cookie-parser");
@@ -16,7 +16,7 @@ const userRouter = require("./routes/user");
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "*",
     credentials: true,
   })
 );
@@ -26,9 +26,10 @@ app.use("/", requestRouter);
 app.use("/", userRouter);
 
 //
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 // Connected to database and server:
+console.log(PORT);
 connectDB()
   .then(() => {
     console.log("Database connection Established...");

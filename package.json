@@ -2,9 +2,9 @@
   "name": "devtinder-backend",
   "version": "1.0.0",
   "description": "web Tinder  for developers ",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node src/app.js ",
+    "start": "node app.js",
     "dev": "nodemon src/app.js"
   },
   "keywords": [
