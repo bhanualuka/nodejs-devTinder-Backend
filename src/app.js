@@ -14,16 +14,16 @@ const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/requests");
 const userRouter = require("./routes/user");
 
+// Use CORS middleware with specified options
 app.use(
   cors({
-    origin: "https://reactjs-dev-tinder-frontend-tb5w.vercel.app",
-    methods: ["GET", "POST", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: [
+      "http://localhost:5173",
+      "https://reactjs-dev-tinder-frontend-mma2.vercel.app",
+    ],
     credentials: true,
   })
 );
-
-app.options("*", cors());
 
 app.use("/", authRouter);
 app.use("/", profileRouter);
@@ -31,17 +31,18 @@ app.use("/", requestRouter);
 app.use("/", userRouter);
 
 //
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 8084;
 
 // Connected to database and server:
 // console.log(PORT);
 connectDB()
   .then(() => {
     console.log("Database connection Established...");
-    app.listen(PORT, () => {
-      console.log("Server is succefully runningg 8888...");
-    });
   })
   .catch(() => {
     console.log("Database cannot be connect");
   });
+
+app.listen(PORT, () => {
+  console.log("Server is succefully runningg " + PORT);
+});
