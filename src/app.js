@@ -9,11 +9,6 @@ const cookieparser = require("cookie-parser");
 app.use(express.json());
 app.use(cookieparser());
 
-const authRouter = require("./routes/auth");
-const profileRouter = require("./routes/profile");
-const requestRouter = require("./routes/requests");
-const userRouter = require("./routes/user");
-
 app.use(
   cors({
     origin: [
@@ -25,6 +20,13 @@ app.use(
     credentials: true,
   })
 );
+
+app.options("*", cors());
+
+const authRouter = require("./routes/auth");
+const profileRouter = require("./routes/profile");
+const requestRouter = require("./routes/requests");
+const userRouter = require("./routes/user");
 
 app.use("/", authRouter);
 app.use("/", profileRouter);
