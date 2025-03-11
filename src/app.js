@@ -14,13 +14,14 @@ const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/requests");
 const userRouter = require("./routes/user");
 
-// Use CORS middleware with specified options
 app.use(
   cors({
     origin: [
       "http://localhost:5176",
-      "https://reactjs-dev-tinder-frontend-mma2.vercel.app",
+      "https://reactjs-dev-tinder-frontend-lzk7nb6q6.vercel.app",
     ],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
