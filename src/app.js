@@ -18,7 +18,7 @@ const userRouter = require("./routes/user");
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
+      "http://localhost:5176",
       "https://reactjs-dev-tinder-frontend-mma2.vercel.app",
     ],
     credentials: true,
@@ -31,7 +31,7 @@ app.use("/", requestRouter);
 app.use("/", userRouter);
 
 //
-const PORT = process.env.PORT || 8084;
+const PORT = process.env.PORT || 8094;
 
 // Connected to database and server:
 // console.log(PORT);
