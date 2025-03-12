@@ -10,6 +10,7 @@ app.use(cookieparser());
 app.use(
   cors({
     origin: [
+      "https://reactjs-dev-tinder-frontend-tb5w.vercel.app",
       "http://localhost:5176",
       "https://reactjs-dev-tinder-frontend-auki-37wujp6q0.vercel.app",
       "https://reactjs-dev-tinder-fr-git-958751-bhanu-prakash-aluka-s-projects.vercel.app",
