@@ -21,8 +21,6 @@ app.use(
   })
 );
 
-app.options("*", cors());
-
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/requests");
