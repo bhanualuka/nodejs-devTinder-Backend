@@ -13,7 +13,9 @@ app.use(
   cors({
     origin: [
       "http://localhost:5176",
-      "https://reactjs-dev-tinder-frontend-lzk7nb6q6.vercel.app",
+      "https://reactjs-dev-tinder-frontend-auki-37wujp6q0.vercel.app/",
+      "https://reactjs-dev-tinder-fr-git-958751-bhanu-prakash-aluka-s-projects.vercel.app/",
+      "https://reactjs-dev-tinder-frontend-auki-37wujp6q0.vercel.app/",
     ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
